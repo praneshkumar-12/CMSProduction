@@ -8,7 +8,7 @@ import random
 
 import appointment_booking as apb
 from Graph import Graph
-import QueueDS
+import queueds
 import send_email
 
 
