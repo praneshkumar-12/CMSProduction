@@ -1,11 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import csv
-import sys
 import datetime
 import os
 import random
-import copy
 
 
 import appointment_booking as apb
