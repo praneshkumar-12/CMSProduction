@@ -224,7 +224,7 @@ def newregister(request):
                 ]
             )
 
-        with open(f"./ClinicManagementSystem/csv/{name}.csv", "a", newline="") as csvfile:
+        with open(f"./csv/{name}.csv", "a", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(
                 [
@@ -718,7 +718,7 @@ def add_patient_details(request):
         )
         allergy = request.POST.get("allergy").replace(",", "-").replace("\r\n", ";")
         abrasions = request.POST.get("abrasions").replace(",", "-").replace("\r\n", ";")
-        with open(f"./ClinicManagementSystem/csv/{name}.csv", "a", newline="") as csvfile:
+        with open(f"./csv/{name}.csv", "a", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(
                 [
@@ -1043,7 +1043,7 @@ def payment_form(request):
             writer.writerow([name, uniqueid, email, charges, charge_type, date_time])
 
         contents_to_write = []
-        with open(f"./ClinicManagementSystem/csv/{name}.csv", "r") as oldfile:
+        with open(f"./csv/{name}.csv", "r") as oldfile:
             reader = csv.reader(oldfile)
             contents_to_write.append(next(reader))
 
@@ -1065,7 +1065,7 @@ def payment_form(request):
             for row in reader:
                 contents_to_write.append(row)
 
-        with open(f"./ClinicManagementSystem/csv/{name}.csv", "w", newline="") as newfile:
+        with open(f"./csv/{name}.csv", "w", newline="") as newfile:
             writer = csv.writer(newfile)
             writer.writerows(contents_to_write)
 
