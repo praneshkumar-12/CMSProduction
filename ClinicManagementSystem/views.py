@@ -283,6 +283,9 @@ def get_email(request):
                 )
 
                 send_email.send_email(to, subject, content)
+                
+                request.session["RANDOM_OTP"] = None
+                request.session["RESET_EMAIL"] = None
 
                 return render(request, "validate_otp.html")
     return render(request, "forgot_password.html")
