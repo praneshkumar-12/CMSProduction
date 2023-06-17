@@ -1192,17 +1192,17 @@ def receptionist_book_appointment(request):
             current_name = patient_name
             with open("patients.csv") as csvfile:
                 reader = csv.reader(csvfile)
-                if current_name not in [name[0] for name in reader]:
+                for row in reader:
+                    if row[0] == current_name:
+                        unique_id = row[-1]
+                        break
+                else:
                     return render(
                         request,
                         "receptionist_book_appointment_search_patient.html",
                         {"alertmessage": "Patient not found!"},
                     )
-                
-                for row in reader:
-                    if row[0] == current_name:
-                        unique_id = row[-1]
-                        break
+            
 
             with open(f"{unique_id}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
