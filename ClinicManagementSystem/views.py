@@ -224,7 +224,7 @@ def newregister(request):
                 ]
             )
 
-        with open(f"./myapp/csv/{name}.csv", "a", newline="") as csvfile:
+        with open(f"./ClinicManagementSystem/csv/{name}.csv", "a", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(
                 [
@@ -430,7 +430,7 @@ def receptionist_search_patient(request):
             last_appointment = temp1.get(min(temp1.keys(), default="EMPTY"))
             upcoming_appointment = temp2.get(min(temp2.keys(), default="EMPTY"))
 
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 for row in reader:
                     data = {
@@ -496,7 +496,7 @@ def receptionist_search_patient(request):
             last_appointment = temp1.get(min(temp1.keys(), default="EMPTY"))
             upcoming_appointment = temp2.get(min(temp2.keys(), default="EMPTY"))
 
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 for row in reader:
                     data = {
@@ -588,7 +588,7 @@ def doctor_search_patient(request):
                 self.date = date
                 self.timeslot = timeslot
 
-        with open(f"./myapp/csv/{patientname}.csv") as csvfile:
+        with open(f"./ClinicManagementSystem/csv/{patientname}.csv") as csvfile:
             reader = csv.reader(csvfile)
             firstrow = next(reader)
 
@@ -720,7 +720,7 @@ def add_patient_details(request):
         )
         allergy = request.POST.get("allergy").replace(",", "-").replace("\r\n", ";")
         abrasions = request.POST.get("abrasions").replace(",", "-").replace("\r\n", ";")
-        with open(f"./myapp/csv/{name}.csv", "a", newline="") as csvfile:
+        with open(f"./ClinicManagementSystem/csv/{name}.csv", "a", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(
                 [
@@ -768,7 +768,7 @@ def doctor_prescription_search_patient(request):
                         "doctor_prescription_search_patient.html",
                         {"alertmessage": "Patient not found!"},
                     )
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 basic_details = next(reader)
                 uniqueid = basic_details[-4]
@@ -786,7 +786,7 @@ def doctor_prescription_search_patient(request):
                     "address": address,
                 }
 
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 if len([row for row in reader]) < 2:
                     data[
@@ -810,7 +810,7 @@ def doctor_prescription_search_patient(request):
                         {"alertmessage": "Patient not found!"},
                     )
             current_name = patient_name
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 basic_details = next(reader)
                 uniqueid = basic_details[-4]
@@ -828,7 +828,7 @@ def doctor_prescription_search_patient(request):
                     "address": address,
                 }
 
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 if len([row for row in reader]) < 2:
                     data[
@@ -859,12 +859,12 @@ def add_prescription_details(request):
         )
         treatment = request.POST.get("treatment").replace(",", "-").replace("\r\n", ";")
         advice = request.POST.get("advice").replace(",", "-").replace("\r\n", ";")
-        with open(f"./myapp/csv/{current_name}.csv", "a", newline="") as csvfile:
+        with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "a", newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow([examination, medical_prescription, treatment, advice])
 
-        with open(f"./myapp/csv/{current_name}.csv", "r") as oldfile, open(
-            f"./myapp/csv/{current_name}.tmp", "w", newline=""
+        with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as oldfile, open(
+            f"./ClinicManagementSystem/csv/{current_name}.tmp", "w", newline=""
         ) as newfile:
             reader = csv.reader(oldfile)
             writer = csv.writer(newfile, quoting=csv.QUOTE_NONE, escapechar="\\")
@@ -879,7 +879,7 @@ def add_prescription_details(request):
             for row in myrow:
                 writer.writerow(row)
 
-        os.replace(f"./myapp/csv/{current_name}.tmp", f"./myapp/csv/{current_name}.csv")
+        os.replace(f"./ClinicManagementSystem/csv/{current_name}.tmp", f"./ClinicManagementSystem/csv/{current_name}.csv")
         return render(
             request,
             "doctor_prescription_search_patient.html",
@@ -989,7 +989,7 @@ def receptionist_transaction_search_patient(request):
                         {"alertmessage": "Patient not found!"},
                     )
 
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 for row in reader:
                     data = {
@@ -1012,7 +1012,7 @@ def receptionist_transaction_search_patient(request):
                         {"alertmessage": "Patient not found!"},
                     )
 
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 for row in reader:
                     data = {
@@ -1048,7 +1048,7 @@ def payment_form(request):
             writer.writerow([name, uniqueid, email, charges, charge_type, date_time])
 
         contents_to_write = []
-        with open(f"./myapp/csv/{name}.csv", "r") as oldfile:
+        with open(f"./ClinicManagementSystem/csv/{name}.csv", "r") as oldfile:
             reader = csv.reader(oldfile)
             contents_to_write.append(next(reader))
 
@@ -1070,7 +1070,7 @@ def payment_form(request):
             for row in reader:
                 contents_to_write.append(row)
 
-        with open(f"./myapp/csv/{name}.csv", "w", newline="") as newfile:
+        with open(f"./ClinicManagementSystem/csv/{name}.csv", "w", newline="") as newfile:
             writer = csv.writer(newfile)
             writer.writerows(contents_to_write)
 
@@ -1171,7 +1171,7 @@ def receptionist_book_appointment(request):
                         {"alertmessage": "Patient not found!"},
                     )
 
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 for row in reader:
                     data = {
@@ -1195,7 +1195,7 @@ def receptionist_book_appointment(request):
                         {"alertmessage": "Patient not found!"},
                     )
 
-            with open(f"./myapp/csv/{current_name}.csv", "r") as csvfile:
+            with open(f"./ClinicManagementSystem/csv/{current_name}.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 for row in reader:
                     data = {
@@ -1633,7 +1633,7 @@ def patient_view_history(request):
                 patientid = row[-1]
                 patientname = row[0]
 
-    with open(f"./myapp/csv/{patientname}.csv") as csvfile:
+    with open(f"./ClinicManagementSystem/csv/{patientname}.csv") as csvfile:
         reader = csv.reader(csvfile)
         firstrow = next(reader)
 
