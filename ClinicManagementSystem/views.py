@@ -643,32 +643,32 @@ def doctor_search_patient(request):
                     )
                     appointmentdatas.append(appointmentdata)
 
-            temp1 = {}
-            temp2 = {}
-            with open("Confirmedappointments.csv") as csvfile:
-                reader = csv.reader(csvfile)
-                for row in reader:
-                    if row[0] == patientid:
-                        doctor_id = row[1]
-                        with open("doctors.csv") as anothercsvfile:
-                            anotherreader = csv.reader(anothercsvfile)
-                            for anotherrow in anotherreader:
-                                if anotherrow[-1] == doctor_id:
-                                    doctorname = anotherrow[0]
+        temp1 = {}
+        temp2 = {}
+        with open("Confirmedappointments.csv") as acsvfile:
+            areader = csv.reader(acsvfile)
+            for arow in areader:
+                if arow[0] == patientid:
+                    doctor_id = arow[1]
+                    with open("doctors.csv") as anothercsvfile:
+                        anotherreader = csv.reader(anothercsvfile)
+                        for anotherrow in anotherreader:
+                            if anotherrow[-1] == doctor_id:
+                                doctorname = anotherrow[0]
 
-                        today = datetime.datetime.today()
-                        appointment = row[2]
-                        date, month, year = appointment.split("-")
-                        appointment_date = datetime.datetime(
-                            int(year), int(month), int(date)
-                        )
-                        if appointment_date > today:
-                            temp2[appointment_date - today] = appointment
-                        else:
-                            temp1[today - appointment_date] = appointment
+                    today = datetime.datetime.today()
+                    appointment = arow[2]
+                    date, month, year = appointment.split("-")
+                    appointment_date = datetime.datetime(
+                        int(year), int(month), int(date)
+                    )
+                    if appointment_date > today:
+                        temp2[appointment_date - today] = appointment
+                    else:
+                        temp1[today - appointment_date] = appointment
 
-            lastappointment = temp1.get(min(temp1.keys(), default="EMPTY"))
-            upcomingappointment = temp2.get(min(temp2.keys(), default="EMPTY"))
+        lastappointment = temp1.get(min(temp1.keys(), default="EMPTY"))
+        upcomingappointment = temp2.get(min(temp2.keys(), default="EMPTY"))
 
         data = {
             "uniqueid": patientid,
@@ -1708,32 +1708,32 @@ def patient_view_history(request):
                 )
                 appointmentdatas.append(appointmentdata)
 
-        temp1 = {}
-        temp2 = {}
-        with open("Confirmedappointments.csv") as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                if row[0] == patientid:
-                    doctor_id = row[1]
-                    with open("doctors.csv") as anothercsvfile:
-                        anotherreader = csv.reader(anothercsvfile)
-                        for anotherrow in anotherreader:
-                            if anotherrow[-1] == doctor_id:
-                                doctorname = anotherrow[0]
+    temp1 = {}
+    temp2 = {}
+    with open("Confirmedappointments.csv") as acsvfile:
+        areader = csv.reader(acsvfile)
+        for arow in areader:
+            if arow[0] == patientid:
+                doctor_id = arow[1]
+                with open("doctors.csv") as anothercsvfile:
+                    anotherreader = csv.reader(anothercsvfile)
+                    for anotherrow in anotherreader:
+                        if anotherrow[-1] == doctor_id:
+                            doctorname = anotherrow[0]
 
-                    today = datetime.datetime.today()
-                    appointment = row[2]
-                    date, month, year = appointment.split("-")
-                    appointment_date = datetime.datetime(
-                        int(year), int(month), int(date)
-                    )
-                    if appointment_date > today:
-                        temp2[appointment_date - today] = appointment
-                    else:
-                        temp1[today - appointment_date] = appointment
+                today = datetime.datetime.today()
+                appointment = arow[2]
+                date, month, year = appointment.split("-")
+                appointment_date = datetime.datetime(
+                    int(year), int(month), int(date)
+                )
+                if appointment_date > today:
+                    temp2[appointment_date - today] = appointment
+                else:
+                    temp1[today - appointment_date] = appointment
 
-        lastappointment = temp1.get(min(temp1.keys(), default="EMPTY"))
-        upcomingappointment = temp2.get(min(temp2.keys(), default="EMPTY"))
+    lastappointment = temp1.get(min(temp1.keys(), default="EMPTY"))
+    upcomingappointment = temp2.get(min(temp2.keys(), default="EMPTY"))
 
     data = {
         "uniqueid": patientid,
