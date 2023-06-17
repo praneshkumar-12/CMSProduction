@@ -284,8 +284,6 @@ def get_email(request):
 
                 send_email.send_email(to, subject, content)
                 
-                request.session["RANDOM_OTP"] = None
-                request.session["RESET_EMAIL"] = None
 
                 return render(request, "validate_otp.html")
     return render(request, "forgot_password.html")
@@ -1049,10 +1047,6 @@ def payment_form(request):
 
         date_time = datetime.datetime.now()
 
-        with open("transactions.csv", "a", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([name, uniqueid, email, charges, charge_type, date_time])
-
         contents_to_write = []
         with open(f"{uniqueid}.csv", "r") as oldfile:
             reader = csv.reader(oldfile)
@@ -1079,6 +1073,10 @@ def payment_form(request):
         with open(f"{uniqueid}.csv", "w", newline="") as newfile:
             writer = csv.writer(newfile)
             writer.writerows(contents_to_write)
+        
+        with open("transactions.csv", "a", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([name, uniqueid, email, charges, charge_type, date_time])
 
         subject = "Payment Status"
 
@@ -1190,6 +1188,7 @@ def receptionist_book_appointment(request):
 
             return render(request, "receptionist_book_appointment.html", data)
         elif patient_name:
+            unique_id = ''
             current_name = patient_name
             with open("patients.csv") as csvfile:
                 reader = csv.reader(csvfile)
