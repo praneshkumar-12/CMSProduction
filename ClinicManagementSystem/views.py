@@ -9,10 +9,6 @@ from Graph import Graph
 import queueds as QueueDS
 import send_email
 
-RANDOM_OTP = 0
-RESET_EMAIL = ""
-CURRENT_USER = ""
-CURRENT_PRIV = ""
 
 QUEUE_DIA = QueueDS.Queue(5)
 QUEUE_ENDO = QueueDS.Queue(5)
@@ -127,20 +123,19 @@ def login(request):
 
                             write.writerow([username, current_date, current_time])
 
-                            global CURRENT_USER, CURRENT_PRIV
-                            CURRENT_USER = username
+                            request.session["CURRENT_USER"] = username
 
                         if row[-2] == "admin":
-                            CURRENT_PRIV = "admin"
+                            request.session["CURRENT_PRIV"] = "admin"
                             return render(request, "admin_homepage.html")
                         elif row[-2] == "rec":
-                            CURRENT_PRIV = "rec"
+                            request.session["CURRENT_PRIV"] = "rec"
                             return render(request, "homepage.html")
                         elif row[-2] == "pat":
-                            CURRENT_PRIV = "pat"
+                            request.session["CURRENT_PRIV"] = "pat"
                             return render(request, "patient_homepage.html")
                         elif row[-2] == "doc":
-                            CURRENT_PRIV = "doc"
+                            request.session["CURRENT_PRIV"] = "doc"
                             return render(
                                 request, "doctor_homepage.html"
                             )  # Redirect to success page after successful login
@@ -269,9 +264,8 @@ def get_email(request):
                     if row[3] == email:
                         name = row[0]
                         break
-                global RANDOM_OTP, RESET_EMAIL
-                RESET_EMAIL = email
-                RANDOM_OTP = random.randint(100000, 999999)
+                request.session["RESET_EMAIL"] = email
+                request.session["RANDOM_OTP"] = random.randint(100000, 999999)
                 subject = "OTP Verification for Resetting your Password"
                 to = email
                 content = (
@@ -280,7 +274,7 @@ def get_email(request):
                         + """, This mail is in response to your request of resetting your clinic account password. 
 
                                     Please enter or provide the following OTP: """
-                        + str(RANDOM_OTP)
+                        + str(request.session["RANDOM_OTP"])
                         + """
 
                                     Note that this OTP is valid only for this instance. Requesting another OTP will 
@@ -305,7 +299,7 @@ def validate_otp(request):
                 "validate_otp.html",
                 {"alertmessage": "Passwords do not match!"},
             )
-        elif int(otp) != RANDOM_OTP:
+        elif int(otp) != request.session["RANDOM_OTP"]:
             return render(
                 request, "validate_otp.html", {"alertmessage": "Incorrect OTP!"}
             )
@@ -313,10 +307,9 @@ def validate_otp(request):
             with open("register.csv", "r") as csvfile:
                 reader = csv.reader(csvfile)
                 rows = list(reader)
-                global RESET_EMAIL
                 for idx, row in enumerate(rows):
-                    if row[3] == RESET_EMAIL:
-                        RESET_EMAIL = ""
+                    if row[3] == request.session["RESET_EMAIL"]:
+                        request.session["RESET_EMAIL"] = ""
                         rows[idx][4] = password
                         break
             csvfile.close()
@@ -335,7 +328,7 @@ def personal_details(request):
     with open("register.csv", "r") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            if row[3] == CURRENT_USER:
+            if row[3] == request.session["CURRENT_USER"]:
                 priv = ""
                 if row[-2] == "admin":
                     priv = "Administrator"
@@ -885,8 +878,8 @@ def add_prescription_details(request):
             for row in myrow:
                 writer.writerow(row)
 
-        os.replace(f"{current_name}.tmp",
-                   f"{current_name}.csv")
+        os.replace(f"{patient_id}.tmp",
+                   f"{patient_id}.csv")
         return render(
             request,
             "doctor_prescription_search_patient.html",
@@ -1270,7 +1263,7 @@ def patient_book_appointment(request):
     with open("patients.csv") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            if row[3] == CURRENT_USER:
+            if row[3] == request.session["CURRENT_USER"]:
                 data.update({
                     "name": row[0],
                     "uniqueid": row[-1],
@@ -1309,7 +1302,7 @@ def view_timeslots(request, data=None):
         with open("patients.csv") as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                if row[3] == CURRENT_USER:
+                if row[3] == request.session["CURRENT_USER"]:
                     name = row[0]
                     break
         subject = "Appointment confirmation"
@@ -1326,7 +1319,7 @@ def view_timeslots(request, data=None):
             f"Thank you."
         )
 
-        send_email.send_email(CURRENT_USER, subject, content)
+        send_email.send_email(request.session["CURRENT_USER"], subject, content)
 
         return render(
             request,
@@ -1396,7 +1389,7 @@ def patient_appointment_history(request):
     with open("patients.csv") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            if row[3] == CURRENT_USER:
+            if row[3] == request.session["CURRENT_USER"]:
                 patient_id = row[-1]
                 patient_name = row[0]
 
@@ -1477,7 +1470,7 @@ def doctor_appointment_history(request):
     with open("doctors.csv") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            if row[3] == CURRENT_USER:
+            if row[3] == request.session["CURRENT_USER"]:
                 doctor_id = row[-1]
                 doctor_name = row[0]
 
@@ -1504,6 +1497,8 @@ def doctor_appointment_history(request):
 
 
 def logout(request):
+    request.session["CURRENT_USER"] = None
+    request.session["CURRENT_PRIV"] = None
     return render(request, "index.html")
 
 
@@ -1600,7 +1595,6 @@ def receptionist_view_local_appointments(request):
 
 
 def patient_view_history(request):
-    global CURRENT_USER
 
     patientid = ""
     patientname = ""
@@ -1638,12 +1632,12 @@ def patient_view_history(request):
 
     patientid = ""
     patientname = ""
-    username = CURRENT_USER
+    username = request.session["CURRENT_USER"]
 
     with open("patients.csv") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            if row[3] == CURRENT_USER:
+            if row[3] == request.session["CURRENT_USER"]:
                 patientid = row[-1]
                 patientname = row[0]
 
@@ -1681,7 +1675,7 @@ def patient_view_history(request):
                 "appointmentdatas": appointmentdatas,
             }
 
-            CURRENT_USER = username
+            request.session["CURRENT_USER"] = username
 
             return render(request, "view_patient_history.html", data)
 
@@ -1759,7 +1753,7 @@ def patient_view_history(request):
         "appointmentdatas": appointmentdatas,
     }
 
-    CURRENT_USER = username
+    request.session["CURRENT_USER"] = username
 
     return render(request, "view_patient_history.html", data)
 
@@ -1779,7 +1773,7 @@ def patient_view_payments(request):
     with open("transactions.csv") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            if row[2] == CURRENT_USER:
+            if row[2] == request.session["CURRENT_USER"]:
                 transactiondatas.append(
                     TransactionData(row[0], row[1], row[2], row[3], row[4], row[5])
                 )
