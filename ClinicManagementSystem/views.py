@@ -1897,6 +1897,7 @@ def receptionist_register(request):
                 "receptionist_register.html",
                 {"alertmessage": "Passwords do not match."},
             )
+        
 
         with open("register.csv", "r") as csvfile:
             reader = csv.reader(csvfile)
