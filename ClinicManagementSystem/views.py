@@ -8,8 +8,6 @@ import random
 import copy
 
 
-sys.path.append("D:/djangoProject/Clinic-management-system/myproj/myapp/")
-
 import appointment_booking as apb
 from Graph import Graph
 import QueueDS
