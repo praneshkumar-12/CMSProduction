@@ -69,7 +69,6 @@ class Graph:
             # print("\n\n",sym,symptoms)
             if sorted(sym) == sorted(symptoms) and disease not in diseases:
                 diseases.append(disease)
-        # print("fianl",diseases)
         if diseases != []:
             return diseases
         max_count = 1

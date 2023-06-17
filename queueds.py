@@ -82,7 +82,8 @@ class Queue:
 
     def peek(self):
         """
-        Returns the element at the front of the queue without removing it. If the queue is empty, raises an EmptyQueueError.
+        Returns the element at the front of the queue without removing it. If the queue is empty,
+         raises an EmptyQueueError.
 
         Returns:
             The element at the front of the queue.
@@ -126,5 +127,3 @@ class Queue:
         if self.rear < self.cap // 4:
             self.resize(self.cap // 2)
         return del_elt
-
-
