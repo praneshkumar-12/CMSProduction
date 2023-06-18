@@ -8,6 +8,7 @@ import appointment_booking as apb
 from Graph import Graph
 import queueds as QueueDS
 import send_email
+from Stack import Stack
 
 
 QUEUE_DIA = QueueDS.Queue(5)
@@ -1801,14 +1802,19 @@ def receptionist_view_payments(request):
             self.chargetype = chargetype
             self.date_time = date_time
 
-    transactiondatas = []
+    transactionstack = Stack(5)
 
     with open("transactions.csv") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            transactiondatas.append(
+            transactionstack.push(
                 TransactionData(row[0], row[1], row[2], row[3], row[4], row[5])
             )
+    
+    transactiondatas = []
+    for idx in range(len(transactionstack)):
+        transactiondatas.append(transactionstack.pop())
+
 
     return render(
         request, "receptionist_payments.html", {"transactiondatas": transactiondatas}
