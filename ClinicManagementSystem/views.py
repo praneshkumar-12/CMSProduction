@@ -1616,8 +1616,8 @@ def patient_view_history(request):
     missingtooth = ""
     allergy = ""
     abrasions = ""
-    medicaldatas = ""
-    appointmentdatas = ""
+    medicaldatas = []
+    appointmentdatas = []
     lastappointment = None
     upcomingappointment = None
 
@@ -1645,6 +1645,9 @@ def patient_view_history(request):
             if row[3] == request.session["CURRENT_USER"]:
                 patientid = row[-1]
                 patientname = row[0]
+    
+    medicaldatas = []
+    appointmentdatas = []
 
     with open("Confirmedappointments.csv") as csvfile:
         reader = csv.reader(csvfile)
@@ -1732,8 +1735,6 @@ def patient_view_history(request):
         allergy = secondrow[9].replace("-", ",").replace(";", "\\n")
         abrasions = secondrow[11].replace("-", ",").replace(";", "\\n")
 
-        medicaldatas = []
-        appointmentdatas = []
 
         for row in reader:
             medicaldata = MedicalData(row[0], row[1], row[2], row[3])
