@@ -1,7 +1,6 @@
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from django.shortcuts import redirect
 from django.contrib.auth.views import LogoutView
 
 from . import views
