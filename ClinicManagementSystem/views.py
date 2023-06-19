@@ -8,6 +8,9 @@ import appointment_booking as apb
 from Graph import Graph
 import queueds as QueueDS
 import send_email
+from Stack import Stack
+from DynamicArray import List
+from HashMap import HashMap
 
 
 QUEUE_DIA = QueueDS.Queue(5)
@@ -34,35 +37,34 @@ QUEUES = [
     QUEUE_URO,
 ]
 
-slot_dict = {
-    "slot1": "09:00-09:30",
-    "slot2": "09:30-10:00",
-    "slot3": "10:00-10:30",
-    "slot4": "10:30-11:00",
-    "slot5": "11:00-11:30",
-    "slot6": "13:30-14:00",
-    "slot7": "14:00-14:30",
-    "slot8": "14:30-15:00",
-    "slot9": "15:00-15:30",
-    "slot10": "15:30-16:00",
-    "slot11": "16:00-16:30",
-    "slot12": "16:30-17:00",
-}
+slot_dict = HashMap()
+slot_dict.put("slot1", "09:00-09:30")
+slot_dict.put("slot2", "09:30-10:00")
+slot_dict.put("slot3", "10:00-10:30")
+slot_dict.put("slot4", "10:30-11:00")
+slot_dict.put("slot5", "11:00-11:30")
+slot_dict.put("slot6", "13:30-14:00")
+slot_dict.put("slot7", "14:00-14:30")
+slot_dict.put("slot8", "14:30-15:00")
+slot_dict.put("slot9", "15:00-15:30")
+slot_dict.put("slot10", "15:30-16:00")
+slot_dict.put("slot11", "16:00-16:30")
+slot_dict.put("slot12", "16:30-17:00")
 
-lbl_slot_dict = {
-    "09:00-09:30": "lblslot1",
-    "09:30-10:00": "lblslot2",
-    "10:00-10:30": "lblslot3",
-    "10:30-11:00": "lblslot4",
-    "11:00-11:30": "lblslot5",
-    "13:30-14:00": "lblslot6",
-    "14:00-14:30": "lblslot7",
-    "14:30-15:00": "lblslot8",
-    "15:00-15:30": "lblslot9",
-    "15:30-16:00": "lblslot10",
-    "16:00-16:30": "lblslot11",
-    "16:30-17:00": "lblslot12",
-}
+lbl_slot_dict = HashMap()
+
+lbl_slot_dict.put("09:00-09:30", "lblslot1")
+lbl_slot_dict.put("09:30-10:00", "lblslot2")
+lbl_slot_dict.put("10:00-10:30", "lblslot3")
+lbl_slot_dict.put("10:30-11:00", "lblslot4")
+lbl_slot_dict.put("11:00-11:30", "lblslot5")
+lbl_slot_dict.put("13:30-14:00", "lblslot6")
+lbl_slot_dict.put("14:00-14:30", "lblslot7")
+lbl_slot_dict.put("14:30-15:00", "lblslot8")
+lbl_slot_dict.put("15:00-15:30", "lblslot9")
+lbl_slot_dict.put("15:30-16:00", "lblslot10")
+lbl_slot_dict.put("16:00-16:30", "lblslot11")
+lbl_slot_dict.put("16:30-17:00", "lblslot12")
 
 
 def home(request):
@@ -574,11 +576,11 @@ def doctor_search_patient(request):
                 self.treatmentadvice = treatmentadvice
 
         class AppointmentData:
-            def __init__(self, pname, dname, dt, ts):
+            def __init__(self, pname, dname, date, timeslot):
                 self.patientname = pname
                 self.doctorname = dname
-                self.date = dt
-                self.timeslot = ts
+                self.date = date
+                self.timeslot = timeslot
 
         temp1 = {}
         temp2 = {}
@@ -1134,7 +1136,7 @@ def receptionist_time_slot(request):
         date = date[:-1]
         oldtimeslot = request.POST.getlist("slots")
 
-        timeslot = []
+        timeslot = List()
         for t in oldtimeslot:
             timeslot.append(slot_dict.get(t))
 
@@ -1334,14 +1336,14 @@ def view_timeslots(request, data=None):
     if request.method == "POST":
 
         class WhatColor:
-            def __init__(self, boolean, ts):
+            def __init__(self, boolean, timeslot):
                 self.color = None
                 if boolean:
                     self.color = "#37d766"
                 else:
                     self.color = "#ff6661"
-                self.lblname = lbl_slot_dict.get(ts)
-                self.rdname = lbl_slot_dict.get(ts).replace("lbl", "")
+                self.lblname = lbl_slot_dict.get(timeslot)
+                self.rdname = lbl_slot_dict.get(timeslot).replace("lbl", "")
 
         doctorid = data.get("d_uniqueid")
         patientid = data.get("p_uniqueid")
@@ -1382,12 +1384,12 @@ def view_timeslots(request, data=None):
 
 def patient_appointment_history(request):
     class PatientAppointmentData:
-        def __init__(self, p_id, d_id, dt, ts, bdt):
-            self.patientid = p_id
-            self.doctorid = d_id
-            self.date = dt
-            self.timeslot = ts
-            self.bookingdatetime = bdt
+        def __init__(self, patient_id, doctor_id, date, timeslot, booking_date_time):
+            self.patientid = patient_id
+            self.doctorid = doctor_id
+            self.date = date
+            self.timeslot = timeslot
+            self.bookingdatetime = booking_date_time
 
     patient_id = ""
     patient_name = ""
@@ -1422,12 +1424,12 @@ def patient_appointment_history(request):
 
 def receptionist_view_appointments(request):
     class AppointmentData:
-        def __init__(self, p_id, d_id, dt, ts, bdt):
-            self.patientid = p_id
-            self.doctorid = d_id
-            self.date = dt
-            self.timeslot = ts
-            self.bookingdatetime = bdt
+        def __init__(self, patient_id, doctor_id, date, timeslot, booking_date_time):
+            self.patientid = patient_id
+            self.doctorid = doctor_id
+            self.date = date
+            self.timeslot = timeslot
+            self.bookingdatetime = booking_date_time
 
     patient_id = ""
     patient_name = ""
@@ -1463,12 +1465,12 @@ def receptionist_view_appointments(request):
 
 def doctor_appointment_history(request):
     class DoctorAppointmentData:
-        def __init__(self, p_id, d_id, dt, ts, bdt):
-            self.patientid = p_id
-            self.doctorid = d_id
-            self.date = dt
-            self.timeslot = ts
-            self.bookingdatetime = bdt
+        def __init__(self, patient_id, doctor_id, date, timeslot, booking_date_time):
+            self.patientid = patient_id
+            self.doctorid = doctor_id
+            self.date = date
+            self.timeslot = timeslot
+            self.bookingdatetime = booking_date_time
 
     doctor_id = ""
     doctor_name = ""
@@ -1801,14 +1803,19 @@ def receptionist_view_payments(request):
             self.chargetype = chargetype
             self.date_time = date_time
 
-    transactiondatas = []
+    transactionstack = Stack(5)
 
     with open("transactions.csv") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            transactiondatas.append(
+            transactionstack.push(
                 TransactionData(row[0], row[1], row[2], row[3], row[4], row[5])
             )
+    
+    transactiondatas = []
+    for idx in range(len(transactionstack)):
+        transactiondatas.append(transactionstack.pop())
+
 
     return render(
         request, "receptionist_payments.html", {"transactiondatas": transactiondatas}
