@@ -1978,3 +1978,5 @@ def receptionist_register(request):
         )
 
     return render(request, "receptionist_register.html")
+
+# End 
